@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Tableau de Bord</title>
+</head>
+<body>
+    <h1>Tableau de bord</h1>
+
+    <h2>Gestion Utilisateurs</h2>
+    <form action="/api/users" method="post">
+        <input type="text" name="name" placeholder="Nom" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Mot de passe" required>
+        <button type="submit">Créer utilisateur</button>
+    </form>
+
+    <form action="/api/users/:id" method="post">
+        <input type="text" name="id" placeholder="ID utilisateur" required>
+        <input type="text" name="name" placeholder="Nouveau nom">
+        <input type="email" name="email" placeholder="Nouvel email">
+        <button type="submit">Modifier utilisateur</button>
+    </form>
+
+    <form action="/api/users/:id" method="post">
+        <input type="text" name="id" placeholder="ID utilisateur" required>
+        <button type="submit">Supprimer utilisateur</button>
+    </form>
+
+    <h2>Gestion Catways</h2>
+    <form action="/api/catways" method="post">
+        <input type="number" name="catwayNumber" placeholder="Numéro" required>
+        <input type="text" name="type" placeholder="Type (long/short)" required>
+        <input type="text" name="catwayState" placeholder="État" required>
+        <button type="submit">Créer catway</button>
+    </form>
+
+    <form action="/api/catways/:id" method="post">
+        <input type="text" name="id" placeholder="ID catway" required>
+        <input type="text" name="catwayState" placeholder="Nouvel état">
+        <button type="submit">Modifier catway</button>
+    </form>
+
+    <form action="/api/catways/:id" method="post">
+        <input type="text" name="id" placeholder="ID catway" required>
+        <button type="submit">Supprimer catway</button>
+    </form>
+
+    <h2>Gestion Réservations</h2>
+    <form action="/api/catways/:id/reservations" method="post">
+        <input type="text" name="catwayNumber" placeholder="Numéro catway" required>
+        <input type="text" name="clientName" placeholder="Nom client" required>
+        <input type="text" name="boatName" placeholder="Nom bateau" required>
+        <input type="date" name="checkIn" required>
+        <input type="date" name="checkOut" required>
+        <button type="submit">Ajouter réservation</button>
+    </form>
+
+    <form action="/api/catways/:id/reservations/:idReservation" method="post">
+        <input type="text" name="idReservation" placeholder="ID réservation" required>
+        <button type="submit">Supprimer réservation</button>
+    </form>
+
+    <br>
+    <a href="/catways">📋 Voir la liste des catways</a> |
+    <a href="/reservations">📋 Voir la liste des réservations</a>
+</body>
+</html>
