@@ -1,2 +1,61 @@
-<h1>Liste des réservations</h1>
-<p>Ici s’affichera la liste des réservations.</p>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Réservations</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        h1 { color: #003366; }
+        ul { list-style-type: none; padding: 0; }
+        li { background: #fff; margin: 5px 0; padding: 10px; border-radius: 5px; }
+        a { color: #003366; text-decoration: none; margin-left: 10px; }
+        p#reservationsMsg { font-weight: bold; }
+        p.success { color: green; }
+        p.error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Liste des réservations</h1>
+    <p id="reservationsMsg"></p>
+    <ul id="reservationsList"></ul>
+
+    <script>
+        function showMessage(msg, success = true) {
+            const el = document.getElementById('reservationsMsg');
+            el.innerText = msg;
+            el.className = success ? 'success' : 'error';
+        }
+
+        async function loadReservations() {
+            try {
+                const res = await fetch('/api/reservations');
+                if (!res.ok) throw new Error(`Erreur HTTP ${res.status}`);
+                const reservations = await res.json();
+
+                const ul = document.getElementById('reservationsList');
+                ul.innerHTML = '';
+
+                if (reservations.length === 0) {
+                    ul.innerHTML = '<li>Aucune réservation trouvée.</li>';
+                    return;
+                }
+
+                reservations.forEach(r => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `Catway #${r.catwayNumber} - Client: ${r.clientName} - Bateau: ${r.boatName} 
+                        <a href="/reservations/detail/${r._id}">Voir détails</a>`;
+                    ul.appendChild(li);
+                });
+
+                showMessage(`Chargement de ${reservations.length} réservations réussi !`, true);
+            } catch (err) {
+                console.error(err);
+                document.getElementById('reservationsList').innerHTML = '<li>Impossible de charger les réservations.</li>';
+                showMessage('Erreur lors du chargement des réservations.', false);
+            }
+        }
+
+        loadReservations();
+    </script>
+</body>
+</html>

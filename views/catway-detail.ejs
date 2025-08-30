@@ -1,2 +1,61 @@
-<h1>Détails d’un catway</h1>
-<p>Ici s’afficheront les infos détaillées du catway sélectionné.</p>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Détails du Catway</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        h1 { color: #003366; }
+        p { margin: 5px 0; }
+        a { color: #003366; text-decoration: none; }
+        #catwayDetail { background: #fff; padding: 15px; border-radius: 5px; }
+        p.success { color: green; font-weight: bold; }
+        p.error { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Détails du Catway</h1>
+    <p id="catwayMsg"></p>
+    <div id="catwayDetail">Chargement...</div>
+
+    <script>
+        function showMessage(msg, success = true) {
+            const el = document.getElementById('catwayMsg');
+            el.innerText = msg;
+            el.className = success ? 'success' : 'error';
+        }
+
+        async function loadCatway() {
+            try {
+                const id = window.location.pathname.split('/').pop();
+                const res = await fetch(`/api/catways/${id}`);
+                if (!res.ok) throw new Error(`Erreur HTTP ${res.status}`);
+                const catway = await res.json();
+
+                const div = document.getElementById('catwayDetail');
+
+                if (!catway || !catway._id) {
+                    div.innerHTML = 'Catway non trouvé.';
+                    showMessage('Catway non trouvé.', false);
+                    return;
+                }
+
+                div.innerHTML = `
+                    <p><strong>ID:</strong> ${catway._id}</p>
+                    <p><strong>Numéro:</strong> ${catway.catwayNumber}</p>
+                    <p><strong>Type:</strong> ${catway.type}</p>
+                    <p><strong>État:</strong> ${catway.catwayState}</p>
+                    <a href="/catways">← Retour à la liste des catways</a>
+                `;
+                showMessage('Catway chargé avec succès !', true);
+            } catch (err) {
+                console.error(err);
+                document.getElementById('catwayDetail').innerText = 'Erreur lors du chargement du catway.';
+                showMessage('Erreur lors du chargement du catway.', false);
+            }
+        }
+
+        loadCatway();
+    </script>
+</body>
+</html>

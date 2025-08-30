@@ -1,2 +1,63 @@
-<h1>Détails d’une réservation</h1>
-<p>Ici s’afficheront les infos détaillées de la réservation sélectionnée.</p>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Détails de la Réservation</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        h1 { color: #003366; }
+        p { margin: 5px 0; }
+        a { color: #003366; text-decoration: none; }
+        #reservationDetail { background: #fff; padding: 15px; border-radius: 5px; }
+        p.success { color: green; font-weight: bold; }
+        p.error { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Détails de la Réservation</h1>
+    <p id="reservationMsg"></p>
+    <div id="reservationDetail">Chargement...</div>
+
+    <script>
+        function showMessage(msg, success = true) {
+            const el = document.getElementById('reservationMsg');
+            el.innerText = msg;
+            el.className = success ? 'success' : 'error';
+        }
+
+        async function loadReservation() {
+            try {
+                const id = window.location.pathname.split('/').pop();
+                const res = await fetch(`/api/reservations/${id}`);
+                if (!res.ok) throw new Error(`Erreur HTTP ${res.status}`);
+                const reservation = await res.json();
+
+                const div = document.getElementById('reservationDetail');
+
+                if (!reservation || !reservation._id) {
+                    div.innerHTML = 'Réservation non trouvée.';
+                    showMessage('Réservation non trouvée.', false);
+                    return;
+                }
+
+                div.innerHTML = `
+                    <p><strong>ID:</strong> ${reservation._id}</p>
+                    <p><strong>Catway Numéro:</strong> ${reservation.catwayNumber}</p>
+                    <p><strong>Client:</strong> ${reservation.clientName}</p>
+                    <p><strong>Bateau:</strong> ${reservation.boatName}</p>
+                    <p><strong>Check-in:</strong> ${new Date(reservation.checkIn).toLocaleDateString()}</p>
+                    <p><strong>Check-out:</strong> ${new Date(reservation.checkOut).toLocaleDateString()}</p>
+                    <a href="/reservations">← Retour à la liste des réservations</a>
+                `;
+                showMessage('Réservation chargée avec succès !', true);
+            } catch (err) {
+                console.error(err);
+                document.getElementById('reservationDetail').innerText = 'Erreur lors du chargement de la réservation.';
+                showMessage('Erreur lors du chargement de la réservation.', false);
+            }
+        }
+
+        loadReservation();
+    </script>
+</body>
+</html>

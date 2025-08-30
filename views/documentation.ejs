@@ -1,2 +1,60 @@
-<h1>Documentation de l’API</h1>
-<p>À remplir plus tard…</p>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Documentation API - Port de Plaisance Russell</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; }
+        h1, h2 { color: #003366; }
+        code { background-color: #f0f0f0; padding: 2px 4px; border-radius: 4px; }
+        pre { background-color: #f9f9f9; padding: 10px; border-left: 4px solid #003366; overflow-x: auto; }
+        a { color: #003366; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <h1>Documentation API</h1>
+    <p>Cette documentation décrit les routes disponibles pour gérer les utilisateurs, les catways et les réservations.</p>
+
+    <h2>📌 Authentification</h2>
+    <ul>
+        <li><code>POST /api/auth/register</code> - Créer un nouvel utilisateur</li>
+        <li><code>POST /api/auth/login</code> - Connexion et récupération d’un token JWT</li>
+    </ul>
+
+    <h2>📌 Utilisateurs</h2>
+    <ul>
+        <li><code>GET /api/users</code> - Liste tous les utilisateurs</li>
+        <li><code>POST /api/users</code> - Crée un utilisateur</li>
+        <li><code>PUT /api/users/:id</code> - Modifie un utilisateur</li>
+        <li><code>DELETE /api/users/:id</code> - Supprime un utilisateur</li>
+    </ul>
+
+    <h2>📌 Catways</h2>
+    <ul>
+        <li><code>GET /api/catways</code> - Liste tous les catways</li>
+        <li><code>GET /api/catways/:id</code> - Détails d’un catway</li>
+        <li><code>POST /api/catways</code> - Crée un catway</li>
+        <li><code>PUT /api/catways/:id</code> - Remplace un catway</li>
+        <li><code>PATCH /api/catways/:id</code> - Modifie partiellement un catway</li>
+        <li><code>DELETE /api/catways/:id</code> - Supprime un catway</li>
+    </ul>
+
+    <h2>📌 Réservations</h2>
+    <ul>
+        <li><code>GET /api/catways/:id/reservations</code> - Liste toutes les réservations d’un catway</li>
+        <li><code>GET /api/catways/:id/reservations/:idReservation</code> - Détails d’une réservation</li>
+        <li><code>POST /api/catways/:id/reservations</code> - Crée une réservation</li>
+        <li><code>DELETE /api/catways/:id/reservations/:idReservation</code> - Supprime une réservation</li>
+    </ul>
+
+    <h2>ℹ️ Notes</h2>
+    <ul>
+        <li>Toutes les routes POST, PUT, PATCH et DELETE nécessitent un token JWT pour l’authentification.</li>
+        <li>Les dates doivent être au format ISO (YYYY-MM-DD) pour les réservations.</li>
+        <li>Le champ <code>type</code> pour un catway peut être <code>long</code> ou <code>short</code>.</li>
+    </ul>
+
+    <br>
+    <a href="/">← Retour à la page d’accueil</a>
+</body>
+</html>

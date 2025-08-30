@@ -3,51 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <title>Tableau de Bord</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        h1, h2 { color: #003366; }
+        form { margin-bottom: 20px; padding: 10px; background: #fff; border-radius: 5px; }
+        input, button { margin: 5px 0; padding: 5px; }
+        button { cursor: pointer; }
+        p { font-weight: bold; }
+        p.success { color: green; }
+        p.error { color: red; }
+        a { color: #003366; text-decoration: none; margin-right: 10px; }
+    </style>
 </head>
 <body>
     <h1>Tableau de bord</h1>
 
+    <!-- Gestion Utilisateurs -->
     <h2>Gestion Utilisateurs</h2>
-    <form action="/api/users" method="post">
-        <input type="text" name="name" placeholder="Nom" required>
+
+    <form id="createUserForm">
+        <input type="text" name="username" placeholder="Nom" required>
         <input type="email" name="email" placeholder="Email" required>
         <input type="password" name="password" placeholder="Mot de passe" required>
         <button type="submit">Créer utilisateur</button>
     </form>
+    <p id="createUserMsg"></p>
 
-    <form action="/api/users/:id" method="post">
+    <form id="updateUserForm">
         <input type="text" name="id" placeholder="ID utilisateur" required>
-        <input type="text" name="name" placeholder="Nouveau nom">
+        <input type="text" name="username" placeholder="Nouveau nom">
         <input type="email" name="email" placeholder="Nouvel email">
         <button type="submit">Modifier utilisateur</button>
     </form>
+    <p id="updateUserMsg"></p>
 
-    <form action="/api/users/:id" method="post">
+    <form id="deleteUserForm">
         <input type="text" name="id" placeholder="ID utilisateur" required>
         <button type="submit">Supprimer utilisateur</button>
     </form>
+    <p id="deleteUserMsg"></p>
 
+    <!-- Gestion Catways -->
     <h2>Gestion Catways</h2>
-    <form action="/api/catways" method="post">
+
+    <form id="createCatwayForm">
         <input type="number" name="catwayNumber" placeholder="Numéro" required>
         <input type="text" name="type" placeholder="Type (long/short)" required>
         <input type="text" name="catwayState" placeholder="État" required>
         <button type="submit">Créer catway</button>
     </form>
+    <p id="createCatwayMsg"></p>
 
-    <form action="/api/catways/:id" method="post">
+    <form id="updateCatwayForm">
         <input type="text" name="id" placeholder="ID catway" required>
         <input type="text" name="catwayState" placeholder="Nouvel état">
         <button type="submit">Modifier catway</button>
     </form>
+    <p id="updateCatwayMsg"></p>
 
-    <form action="/api/catways/:id" method="post">
+    <form id="deleteCatwayForm">
         <input type="text" name="id" placeholder="ID catway" required>
         <button type="submit">Supprimer catway</button>
     </form>
+    <p id="deleteCatwayMsg"></p>
 
+    <!-- Gestion Réservations -->
     <h2>Gestion Réservations</h2>
-    <form action="/api/catways/:id/reservations" method="post">
+
+    <form id="createReservationForm">
         <input type="text" name="catwayNumber" placeholder="Numéro catway" required>
         <input type="text" name="clientName" placeholder="Nom client" required>
         <input type="text" name="boatName" placeholder="Nom bateau" required>
@@ -55,14 +78,117 @@
         <input type="date" name="checkOut" required>
         <button type="submit">Ajouter réservation</button>
     </form>
+    <p id="createReservationMsg"></p>
 
-    <form action="/api/catways/:id/reservations/:idReservation" method="post">
+    <form id="deleteReservationForm">
+        <input type="text" name="catwayNumber" placeholder="Numéro catway" required>
         <input type="text" name="idReservation" placeholder="ID réservation" required>
         <button type="submit">Supprimer réservation</button>
     </form>
+    <p id="deleteReservationMsg"></p>
 
     <br>
-    <a href="/catways">📋 Voir la liste des catways</a> |
+    <a href="/catways">📋 Voir la liste des catways</a>
     <a href="/reservations">📋 Voir la liste des réservations</a>
+
+    <script>
+        // Fonction générique pour afficher messages
+        function showMessage(id, message, success=true){
+            const el = document.getElementById(id);
+            el.innerText = message;
+            el.className = success ? 'success' : 'error';
+        }
+
+        // --- Utilisateurs ---
+        document.getElementById('createUserForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(e.target).entries());
+            try{
+                const res = await fetch('/api/users', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
+                const json = await res.json();
+                showMessage('createUserMsg', json.message || 'Utilisateur créé !', res.ok);
+                if(res.ok) e.target.reset();
+            }catch(err){ showMessage('createUserMsg', 'Erreur réseau', false); }
+        });
+
+        document.getElementById('updateUserForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(e.target).entries());
+            const id = data.id; delete data.id;
+            try{
+                const res = await fetch(`/api/users/${id}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
+                const json = await res.json();
+                showMessage('updateUserMsg', json.message || 'Utilisateur modifié !', res.ok);
+            }catch(err){ showMessage('updateUserMsg', 'Erreur réseau', false); }
+        });
+
+        document.getElementById('deleteUserForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const id = e.target.id.value;
+            try{
+                const res = await fetch(`/api/users/${id}`, { method:'DELETE' });
+                const json = await res.json();
+                showMessage('deleteUserMsg', json.message || 'Utilisateur supprimé !', res.ok);
+            }catch(err){ showMessage('deleteUserMsg', 'Erreur réseau', false); }
+        });
+
+        // --- Catways ---
+        document.getElementById('createCatwayForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(e.target).entries());
+            try{
+                const res = await fetch('/api/catways', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
+                const json = await res.json();
+                showMessage('createCatwayMsg', json.message || 'Catway créé !', res.ok);
+                if(res.ok) e.target.reset();
+            }catch(err){ showMessage('createCatwayMsg', 'Erreur réseau', false); }
+        });
+
+        document.getElementById('updateCatwayForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(e.target).entries());
+            const id = data.id; delete data.id;
+            try{
+                const res = await fetch(`/api/catways/${id}`, { method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
+                const json = await res.json();
+                showMessage('updateCatwayMsg', json.message || 'Catway modifié !', res.ok);
+            }catch(err){ showMessage('updateCatwayMsg', 'Erreur réseau', false); }
+        });
+
+        document.getElementById('deleteCatwayForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const id = e.target.id.value;
+            try{
+                const res = await fetch(`/api/catways/${id}`, { method:'DELETE' });
+                const json = await res.json();
+                showMessage('deleteCatwayMsg', json.message || 'Catway supprimé !', res.ok);
+            }catch(err){ showMessage('deleteCatwayMsg', 'Erreur réseau', false); }
+        });
+
+        // --- Réservations ---
+        document.getElementById('createReservationForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(e.target).entries());
+            const catwayNumber = data.catwayNumber; delete data.catwayNumber;
+            try{
+                const res = await fetch(`/api/catways/${catwayNumber}/reservations`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
+                const json = await res.json();
+                showMessage('createReservationMsg', json.message || 'Réservation ajoutée !', res.ok);
+                if(res.ok) e.target.reset();
+            }catch(err){ showMessage('createReservationMsg', 'Erreur réseau', false); }
+        });
+
+        document.getElementById('deleteReservationForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(e.target).entries());
+            const catwayNumber = data.catwayNumber;
+            const idReservation = data.idReservation;
+            try{
+                const res = await fetch(`/api/catways/${catwayNumber}/reservations/${idReservation}`, { method:'DELETE' });
+                const json = await res.json();
+                showMessage('deleteReservationMsg', json.message || 'Réservation supprimée !', res.ok);
+            }catch(err){ showMessage('deleteReservationMsg', 'Erreur réseau', false); }
+        });
+    </script>
 </body>
 </html>

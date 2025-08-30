@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('express'); 
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 
@@ -18,6 +18,9 @@ app.use(express.json());
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/catways', require('./routes/catwayRoutes'));
 app.use('/api/reservations', require('./routes/reservationRoutes'));
+
+// 🔑 Routes d’authentification
+app.use('/api/auth', require('./routes/authRoutes')); // <-- Ajout ici
 
 // 📌 Routes pages HTML
 app.get('/', (req, res) => {

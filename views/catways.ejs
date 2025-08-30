@@ -1,2 +1,61 @@
-<h1>Liste des catways</h1>
-<p>Ici s’affichera la liste des catways.</p>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Catways</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        h1 { color: #003366; }
+        ul { list-style-type: none; padding: 0; }
+        li { background: #fff; margin: 5px 0; padding: 10px; border-radius: 5px; }
+        a { color: #003366; text-decoration: none; margin-left: 10px; }
+        p#catwaysMsg { font-weight: bold; }
+        p.success { color: green; }
+        p.error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Liste des catways</h1>
+    <p id="catwaysMsg"></p>
+    <ul id="catwaysList"></ul>
+
+    <script>
+        function showMessage(msg, success = true) {
+            const el = document.getElementById('catwaysMsg');
+            el.innerText = msg;
+            el.className = success ? 'success' : 'error';
+        }
+
+        async function loadCatways() {
+            try {
+                const res = await fetch('/api/catways');
+                if (!res.ok) throw new Error(`Erreur HTTP ${res.status}`);
+                const catways = await res.json();
+
+                const ul = document.getElementById('catwaysList');
+                ul.innerHTML = '';
+
+                if (catways.length === 0) {
+                    ul.innerHTML = '<li>Aucun catway trouvé.</li>';
+                    return;
+                }
+
+                catways.forEach(c => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `#${c.catwayNumber} - ${c.type} - ${c.catwayState} 
+                        <a href="/catways/detail/${c._id}">Voir détails</a>`;
+                    ul.appendChild(li);
+                });
+
+                showMessage(`Chargement de ${catways.length} catways réussi !`, true);
+            } catch (err) {
+                console.error(err);
+                document.getElementById('catwaysList').innerHTML = '<li>Impossible de charger les catways.</li>';
+                showMessage('Erreur lors du chargement des catways.', false);
+            }
+        }
+
+        loadCatways();
+    </script>
+</body>
+</html>

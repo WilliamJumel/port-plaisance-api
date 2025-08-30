@@ -3,23 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <title>Port de Plaisance Russell</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        h1, h2 { color: #003366; }
+        form { margin-bottom: 20px; padding: 10px; background: #fff; border-radius: 5px; }
+        input, button { margin: 5px 0; padding: 5px; }
+        button { cursor: pointer; }
+        p#loginMessage { font-weight: bold; }
+        a { color: #003366; text-decoration: none; }
+    </style>
 </head>
 <body>
     <h1>Bienvenue sur l’API du Port de Plaisance Russell 🚤</h1>
     <p>Cette application permet à la capitainerie de gérer les catways et leurs réservations.</p>
 
     <h2>Connexion</h2>
-    <form action="/dashboard" method="get">
+    <form id="loginForm">
         <label>Email :</label>
-        <input type="email" name="email" required>
+        <input type="email" id="email" name="email" required>
         <br>
         <label>Mot de passe :</label>
-        <input type="password" name="password" required>
+        <input type="password" id="password" name="password" required>
         <br>
         <button type="submit">Se connecter</button>
     </form>
 
+    <p id="loginMessage" style="color:red;"></p>
+
     <br>
     <a href="/documentation">📄 Voir la documentation de l’API</a>
+
+    <script>
+        const form = document.getElementById('loginForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+
+                const messageEl = document.getElementById('loginMessage');
+
+                if (res.ok) {
+                    messageEl.style.color = 'green';
+                    messageEl.innerText = 'Connexion réussie ! Redirection...';
+                    // Stocker le token dans le localStorage
+                    localStorage.setItem('token', data.token);
+                    // Redirection vers le dashboard après 1s
+                    setTimeout(() => { window.location.href = '/dashboard'; }, 1000);
+                } else {
+                    messageEl.style.color = 'red';
+                    messageEl.innerText = data.message || 'Erreur serveur';
+                }
+            } catch (err) {
+                console.error(err);
+                const messageEl = document.getElementById('loginMessage');
+                messageEl.style.color = 'red';
+                messageEl.innerText = 'Erreur serveur, veuillez réessayer.';
+            }
+        });
+    </script>
 </body>
 </html>
