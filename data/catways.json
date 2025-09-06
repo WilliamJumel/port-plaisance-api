@@ -1,0 +1,20 @@
+[
+  {
+    "_id": "1",
+    "catwayNumber": 1,
+    "type": "long",
+    "catwayState": "libre"
+  },
+  {
+    "_id": "2",
+    "catwayNumber": 2,
+    "type": "short",
+    "catwayState": "occupé"
+  },
+  {
+    "_id": "3",
+    "catwayNumber": 3,
+    "type": "long",
+    "catwayState": "en réparation"
+  }
+]

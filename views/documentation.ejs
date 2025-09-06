@@ -9,11 +9,26 @@
         code { background-color: #f0f0f0; padding: 2px 4px; border-radius: 4px; }
         pre { background-color: #f9f9f9; padding: 10px; border-left: 4px solid #003366; overflow-x: auto; }
         a { color: #003366; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+        th, td { border: 1px solid #ccc; padding: 6px 10px; text-align: left; }
+        th { background-color: #e0e0e0; }
     </style>
 </head>
 <body>
     <h1>Documentation API</h1>
     <p>Cette documentation décrit les routes disponibles pour gérer les utilisateurs, les catways et les réservations.</p>
+
+    <h2>🌐 Pages Frontend</h2>
+    <ul>
+        <li><a href="/">Accueil / Connexion</a></li>
+        <li><a href="/dashboard">Dashboard (gestion)</a></li>
+        <li><a href="/catways">Liste des Catways</a></li>
+        <li><a href="/reservations">Liste des Réservations</a></li>
+        <li>Catway détail : <code>/catways/detail/&lt;_id&gt;</code></li>
+        <li>Réservation détail : <code>/reservations/detail/&lt;_id&gt;</code></li>
+        <li><a href="/documentation">Documentation API (cette page)</a></li>
+    </ul>
 
     <h2>📌 Authentification</h2>
     <ul>
@@ -24,7 +39,13 @@
     <h2>📌 Utilisateurs</h2>
     <ul>
         <li><code>GET /api/users</code> - Liste tous les utilisateurs</li>
-        <li><code>POST /api/users</code> - Crée un utilisateur</li>
+        <li><code>POST /api/users</code> - Crée un utilisateur (exemple JSON à envoyer) :
+            <pre>{
+  "username": "Alice",
+  "email": "alice@example.com",
+  "password": "password123"
+}</pre>
+        </li>
         <li><code>PUT /api/users/:id</code> - Modifie un utilisateur</li>
         <li><code>DELETE /api/users/:id</code> - Supprime un utilisateur</li>
     </ul>
@@ -33,7 +54,13 @@
     <ul>
         <li><code>GET /api/catways</code> - Liste tous les catways</li>
         <li><code>GET /api/catways/:id</code> - Détails d’un catway</li>
-        <li><code>POST /api/catways</code> - Crée un catway</li>
+        <li><code>POST /api/catways</code> - Crée un catway (exemple JSON) :
+            <pre>{
+  "catwayNumber": 5,
+  "type": "long",
+  "catwayState": "libre"
+}</pre>
+        </li>
         <li><code>PUT /api/catways/:id</code> - Remplace un catway</li>
         <li><code>PATCH /api/catways/:id</code> - Modifie partiellement un catway</li>
         <li><code>DELETE /api/catways/:id</code> - Supprime un catway</li>
@@ -41,17 +68,87 @@
 
     <h2>📌 Réservations</h2>
     <ul>
-        <li><code>GET /api/catways/:id/reservations</code> - Liste toutes les réservations d’un catway</li>
-        <li><code>GET /api/catways/:id/reservations/:idReservation</code> - Détails d’une réservation</li>
-        <li><code>POST /api/catways/:id/reservations</code> - Crée une réservation</li>
-        <li><code>DELETE /api/catways/:id/reservations/:idReservation</code> - Supprime une réservation</li>
+        <li><code>GET /api/reservations</code> - Liste toutes les réservations</li>
+        <li><code>GET /api/reservations/:id</code> - Détail d’une réservation</li>
+        <li><code>POST /api/reservations</code> - Crée une réservation (exemple JSON) :
+            <pre>{
+  "catwayNumber": 1,
+  "clientName": "Bob",
+  "boatName": "Sea Breeze",
+  "checkIn": "2025-09-10",
+  "checkOut": "2025-09-15"
+}</pre>
+        </li>
+        <li><code>PATCH /api/reservations/:id</code> - Modifie partiellement une réservation</li>
+        <li><code>DELETE /api/reservations/:id</code> - Supprime une réservation</li>
     </ul>
 
-    <h2>ℹ️ Notes</h2>
+    <h2>📝 Tableau des IDs pour tests directs</h2>
+    <p>Cliquer sur un <code>_id</code> pour accéder directement à la page détail :</p>
+
+    <h3>Catways</h3>
+    <table>
+        <tr>
+            <th>Numéro</th>
+            <th>Type</th>
+            <th>État</th>
+            <th>_id (lien)</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>long</td>
+            <td>libre</td>
+            <td><a href="/catways/detail/1">1</a></td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>short</td>
+            <td>occupé</td>
+            <td><a href="/catways/detail/2">2</a></td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>long</td>
+            <td>en réparation</td>
+            <td><a href="/catways/detail/3">3</a></td>
+        </tr>
+    </table>
+
+    <h3>Réservations</h3>
+    <table>
+        <tr>
+            <th>Catway #</th>
+            <th>Client</th>
+            <th>Bateau</th>
+            <th>_id (lien)</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Bob</td>
+            <td>Sea Breeze</td>
+            <td><a href="/reservations/detail/101">101</a></td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Alice</td>
+            <td>Wave Rider</td>
+            <td><a href="/reservations/detail/102">102</a></td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Charlie</td>
+            <td>Sun Chaser</td>
+            <td><a href="/reservations/detail/103">103</a></td>
+        </tr>
+    </table>
+
+    <h2>ℹ️ Notes importantes</h2>
     <ul>
         <li>Toutes les routes POST, PUT, PATCH et DELETE nécessitent un token JWT pour l’authentification.</li>
         <li>Les dates doivent être au format ISO (YYYY-MM-DD) pour les réservations.</li>
         <li>Le champ <code>type</code> pour un catway peut être <code>long</code> ou <code>short</code>.</li>
+        <li>Pour tester les détails de catway/réservation, utilisez les liens du tableau ci-dessus pour éviter de chercher les IDs dans les JSON.</li>
+        <li>Tous les liens front sont cliquables pour naviguer facilement.</li>
     </ul>
 
     <br>

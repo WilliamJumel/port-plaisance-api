@@ -1,0 +1,18 @@
+[
+  {
+    "_id": "101",
+    "catwayNumber": 1,
+    "clientName": "Jean Dupont",
+    "boatName": "Le Neptune",
+    "checkIn": "2025-09-01T00:00:00.000Z",
+    "checkOut": "2025-09-10T00:00:00.000Z"
+  },
+  {
+    "_id": "102",
+    "catwayNumber": 2,
+    "clientName": "Alice Martin",
+    "boatName": "L’Océan Bleu",
+    "checkIn": "2025-09-05T00:00:00.000Z",
+    "checkOut": "2025-09-15T00:00:00.000Z"
+  }
+]

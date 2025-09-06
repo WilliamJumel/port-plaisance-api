@@ -1,9 +1,9 @@
 const express = require('express'); 
 const dotenv = require('dotenv');
-const connectDB = require('./config/db');
+// const connectDB = require('./config/db');  // <-- Commenté car on n'utilise pas MongoDB
 
 dotenv.config();
-connectDB();
+// connectDB();  // <-- Commenté pour tourner avec les fichiers JSON
 
 const app = express();
 
@@ -20,7 +20,7 @@ app.use('/api/catways', require('./routes/catwayRoutes'));
 app.use('/api/reservations', require('./routes/reservationRoutes'));
 
 // 🔑 Routes d’authentification
-app.use('/api/auth', require('./routes/authRoutes')); // <-- Ajout ici
+app.use('/api/auth', require('./routes/authRoutes'));
 
 // 📌 Routes pages HTML
 app.get('/', (req, res) => {
